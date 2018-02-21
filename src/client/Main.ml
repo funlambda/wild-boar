@@ -1,42 +1,47 @@
-(* let floatEditor = 
+open Util
+open UiLibrary.Util
+open UiLibrary
+open UiLibrary.Operators
+
+let floatEditor = 
     Textbox.block 
-    |> mapInit string 
-    |> mapValue Common.tryParseFloat
+    |> Block2.mapInit string_of_float 
+    |> Block2.mapValue float_of_string_opt
 
 let floatPicker min max =
     Bound.mutually
         floatEditor
-        (Slider.block |> mapValue (fun x -> min + (x * (max - min))) |> Block.mapValue Some)
-    |> mapValue Option.get
+        (Slider.block 
+         |> Block2.mapValue (fun x -> Some (min +. (x *. (max -. min))))
+         |> Block2.mapValue (fun x ->  x))
+    |> Block2.mapValue getOption
 
-let interactivePathChart pathConfigs variablesEditor initialValue =
+let interactivePathChart pathConfigs variablesEditor _initialValue =
     Bound.secondToFirst
-        (PathChart.mkBlock pathConfigs |> Block.mapValue Some)
-        (variablesEditor |> Block.mapValue Some)
-    |> mapInit (fun () -> initialValue)
-    |> mapValue ignore
-
+        (PathChart.mkBlock pathConfigs |> Block2.mapValue (fun x -> Some x))
+        (variablesEditor |> Block2.mapValue (fun x -> Some x))
 
 let stepT = 0.0001
 let stepV = 0.001
 
 let chart0 =
-    interactivePathChart [|
-        PathChart.mkPath (PathChart.Color "#0074d9") (fun finalT -> Problem.farmerPosition |> Util2.trace (0., finalT))
-    |] (floatPicker 0. 1.) 0.5
+    interactivePathChart [
+        PathChart.mkPath (PathChart.Color "#0074d9") (fun finalT -> Problem.farmerPosition |> trace (0., finalT))
+    ] (floatPicker 0. 1.) 0.5
 
 let chart1 =
-    interactivePathChart [|
-        PathChart.mkPath (PathChart.Color "red") (fun finalT -> let f = Problem.sameSpeedSolution stepT in f |> Util2.traceOptional (0., finalT))
-        PathChart.mkPath (PathChart.Color "#0074d9") (fun finalT -> Problem.farmerPosition |> Util2.trace (0., finalT))
-    |] (floatPicker 0. 1.) 0.5
+    interactivePathChart [
+        PathChart.mkPath (PathChart.Color "red") (fun finalT -> let f = Problem.sameSpeedSolution stepT in f |> traceOptional (0., finalT));
+        PathChart.mkPath (PathChart.Color "#0074d9") (fun finalT -> Problem.farmerPosition |> trace (0., finalT))
+    ] (floatPicker 0. 1.) 0.5
 
 let chart2 =
-    interactivePathChart [|
-        PathChart.mkPath (PathChart.Color "red") (fun (v, finalT) -> Problem.computeSolutionForBoarSpeed v stepT |> Util2.traceOptional (0., finalT))
-        PathChart.mkPath (PathChart.Color "#0074d9") (fun (_, finalT) -> Problem.farmerPosition |> Util2.trace (0., finalT))
-    |] ((floatPicker 0. 2.) <&&> (floatPicker 0. 1.)) (1.0, 0.5)
+    interactivePathChart [
+        PathChart.mkPath (PathChart.Color "red") (fun (v, finalT) -> Problem.computeSolutionForBoarSpeed v stepT |> traceOptional (0., finalT));
+        PathChart.mkPath (PathChart.Color "#0074d9") (fun (_, finalT) -> Problem.farmerPosition |> trace (0., finalT))
+    ] ((floatPicker 0. 2.) <&&> (floatPicker 0. 1.)) (1.0, 0.5)
 
+(*
 let precomputed = Problem.precomputeGeneralSolution (0., 1.) (0., 2.) stepT stepV
 
 let chart3 =
@@ -53,11 +58,4 @@ let chart4 =
         PathChart.mkPath (PathChart.Color "red") (fun () -> finalPositionForV |> Util.trace (0., 2.))
     |]
 
-
-let blocks = 
-    createObj [
-        "chart0" ==> chart0
-        "chart1" ==> chart1
-        "chart2" ==> chart2
-    ]
  *)

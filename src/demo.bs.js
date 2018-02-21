@@ -2,6 +2,6 @@
 'use strict';
 
 
-console.log("Hello, BuckleScript");
+console.log("Hello, BuckleScript!");
 
 /*  Not a pure module */

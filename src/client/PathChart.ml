@@ -1,21 +1,22 @@
-let x = 2
+open UiLibrary
 
+type path = | Path of Vector2.t array
+type color = | Color of string
 
-(* type Path = Path of Vector2 array
-type Color = Color of string
-
-type Model = {
-    Paths: (Color * Path) array
+type model = {
+    paths: (color * path) array
 }
 
-type PathConfig<'Init> = {
-    Color: Color
-    Path: 'Init -> Vector2 array
+type 'v pathConfig = {
+    color: color;
+    path: 'v -> Vector2.t array
 }
 
-let mkPath color path = { Color = color; Path = path }
+let mkPath color path = { color = color; path = path }
 
-let mkBlock (configs: PathConfig<'Init> array) =
-    Static.mkBlock ()
-    |> Block.mapInit (fun init -> configs |> Array.map (fun c -> c.Path init))
-    |> Block.mapModel (fun arr -> { Paths = arr |> Array.mapi (fun i x -> (configs.[i].Color, Path x)) }) *)
+let mkBlock (configs: 'init pathConfig list) =
+    let configs = configs |> Array.of_list in
+
+    Static.block
+    |> Block2.mapInit (fun init -> configs |> Array.map (fun c -> c.path init))
+    |> Block2.mapModel (fun arr -> { paths = arr |> Array.mapi (fun i x -> (configs.(i).color, Path x)) })
