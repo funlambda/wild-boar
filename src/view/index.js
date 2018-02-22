@@ -31,4 +31,4 @@ const getTag = model => {
   return "";
 };
 
-module.exports = dynamic.mkView({ viewSet, getTag, backupView: debugView });
+module.exports = dynamic.mkView({ viewSet, getTag, backupView: debugView(getTag) });
