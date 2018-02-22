@@ -16,10 +16,12 @@ let floatPicker min max =
          |> Block2.mapValue (fun x ->  x))
     |> Block2.mapValue getOption
 
-let interactivePathChart pathConfigs variablesEditor _initialValue =
+let interactivePathChart pathConfigs variablesEditor initialValue =
     Bound.secondToFirst
         (PathChart.mkBlock pathConfigs |> Block2.mapValue (fun x -> Some x))
         (variablesEditor |> Block2.mapValue (fun x -> Some x))
+    |> Block2.mapInit (fun () -> initialValue)
+    |> Block2.mapValue ignore
 
 let stepT = 0.0001
 let stepV = 0.001
