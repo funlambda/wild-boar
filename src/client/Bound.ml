@@ -1,5 +1,5 @@
-open UiLibrary
-open UiLibrary.Util.LeftRight
+open BsUiLibrary
+open BsUiLibrary.Util.LeftRight
 
 let mutually block1 block2 =
     (block1, block2)
@@ -15,6 +15,11 @@ let mutually block1 block2 =
              | None -> [ ]))
     |> Block2.mapInit (fun v -> v, v)
     |> Block2.mapValue snd
+    |> Block2.mapModel (fun (l,r) -> [%bs.obj {
+        __tag = "Bound";
+        left = l;
+        right = r;
+    }])
 
 let secondToFirst block1 block2 =
     (block1, block2)
@@ -28,3 +33,8 @@ let secondToFirst block1 block2 =
                  | None -> [ ]))
     |> Block2.mapInit (fun x -> x, x)
     |> Block2.mapValue snd
+    |> Block2.mapModel (fun (l,r) -> [%bs.obj {
+        __tag = "Bound";
+        left = l;
+        right = r;
+    }])

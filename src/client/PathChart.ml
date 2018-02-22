@@ -1,4 +1,4 @@
-open UiLibrary
+open BsUiLibrary
 
 type path = | Path of Vector2.t array
 type color = | Color of string
@@ -19,4 +19,7 @@ let mkBlock (configs: 'init pathConfig list) =
 
     Static.block
     |> Block2.mapInit (fun init -> configs |> Array.map (fun c -> c.path init))
-    |> Block2.mapModel (fun arr -> { paths = arr |> Array.mapi (fun i x -> (configs.(i).color, Path x)) })
+    |> Block2.mapModel (fun arr -> [%bs.obj { 
+            __tag = "PathChart";
+            paths = arr |> Array.mapi (fun i x -> (configs.(i).color, Path x)) 
+        }])

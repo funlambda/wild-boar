@@ -1,30 +1,27 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Main from './Main.bs';
-
-const view = m => "Chart goes here!!";
+const view = require('./view/index');
 
 const render = (container, m) => {
   console.log('Chart Model:', m);
   const reactElem = view(m);
   ReactDOM.render(reactElem, container);
-}
+};
 
-export const run = (blocks) => {
+export const blocks = {
+  chart0: Main.chart0,
+  chart1: Main.chart1,
+  chart2: Main.chart2
+};
+
+export const startAll = () => {
   console.log('Running interactive blocks', blocks);
   Object.keys(blocks).map(k => {
     const container = document.getElementById('block-' + k);
-    if (!container) {
-      console.log("Unable to find container in DOM for block " + k);
-    } else {
+    if (container) {
       console.log('Running block ' + k)
-      runMain(m => render(container, m));
+      blocks[k](m => render(container, m));
     }
   });
 };
-
-export const blocks = [
-  [ "chart0",  Main.chart0 ],
-  [ "chart1",  Main.chart1 ],
-  [ "chart2",  Main.chart2 ]  
-];

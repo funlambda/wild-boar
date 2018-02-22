@@ -1,4 +1,4 @@
-let run = UiLibrary.Runner.run
+let run = BsUiLibrary.Runner.run
 
 let chart0 = run Figures.chart0
 let chart1 = run Figures.chart1

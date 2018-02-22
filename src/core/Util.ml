@@ -1,4 +1,4 @@
-open UiLibrary.Util
+open BsUiLibrary.Util
 
 let getPoints ((min: float), (max: float), (step: float)) =
   let n = ((max -. min) /. step) |> floor |> int_of_float in
@@ -14,7 +14,7 @@ let traceOptional (minT, maxT) f =
     trace (minT, maxT) f
     |> Array.to_list
     |> List.filter (function | Some _ -> true | _ -> false)
-    |> List.map UiLibrary.Util.getOption
+    |> List.map BsUiLibrary.Util.getOption
     |> Array.of_list
 
 let roundFloat f = floor (f +. 0.5)

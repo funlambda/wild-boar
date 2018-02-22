@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { PathLine } from 'react-svg-pathline'
 
-module.exports = model => {
+module.exports = m => {
   const paths =
-    model.Paths.map(x => [ x[0].Fields[0], x[1].Fields[0].map(a => ({ x: a.Fields[0] * 100, y: (1 - a.Fields[1]) * 100 })) ])
-               .filter(x => x[1].length > 0);
+    m.paths.map(x => ({ color: x[0], points: x[1][0].map(a => ({ x: a[0] * 100, y: (1 - a[1]) * 100 })) }))
+           .filter(x => x.points.length > 0);
 
   return (
     <svg viewBox="0 0 100 100" width="300" height="300">
@@ -21,14 +21,14 @@ module.exports = model => {
               <line x1={0} y1={0} x2={100} y2={0} strokeDasharray="2,1" stroke="grey" strokeWidth={0.2} />
               <line x1={100} y1={0} x2={100} y2={100} strokeDasharray="2,1" stroke="grey" strokeWidth={0.2} />
               <circle cx={100} cy={0} r={1.5} fill="grey" />
-              <text y={-2} x={107} style={{ textAnchor: "middle", fontSize: 6, fill: "grey" }}>exit</text>
+              <text y={-2} x={107} style={{ textAnchor: "middle", fontSize: 6, fill: "#888" }}>exit</text>
             </g>
             <g>
               {paths.map(p => (
                 <PathLine
-                   points={p[1]}
+                   points={p.points}
                    fill="none"
-                   stroke={p[0]}
+                   stroke={p.color}
                    r={0.01} />
               ))}
             </g>

@@ -1,7 +1,7 @@
 open Util
-open UiLibrary.Util
-open UiLibrary
-open UiLibrary.Operators
+open BsUiLibrary.Util
+open BsUiLibrary
+open BsUiLibrary.Operators
 
 let floatEditor = 
     Textbox.block 
@@ -9,19 +9,21 @@ let floatEditor =
     |> Block2.mapValue float_of_string_opt
 
 let floatPicker min max =
-    Bound.mutually
-        floatEditor
-        (Slider.block 
-         |> Block2.mapValue (fun x -> Some (min +. (x *. (max -. min))))
-         |> Block2.mapValue (fun x ->  x))
-    |> Block2.mapValue getOption
+    Block2.(
+        Bound.mutually
+            floatEditor
+            (Slider.block 
+             |> mapValue (fun x -> Some (min +. (x *. (max -. min))))
+             |> mapValue (fun x ->  x))
+        |> mapValue getOption)
 
 let interactivePathChart pathConfigs variablesEditor initialValue =
-    Bound.secondToFirst
-        (PathChart.mkBlock pathConfigs |> Block2.mapValue (fun x -> Some x))
-        (variablesEditor |> Block2.mapValue (fun x -> Some x))
-    |> Block2.mapInit (fun () -> initialValue)
-    |> Block2.mapValue ignore
+    Block2.(
+        Bound.secondToFirst
+            (PathChart.mkBlock pathConfigs |> mapValue (fun x -> Some x))
+            (variablesEditor |> mapValue (fun x -> Some x))
+        |> mapInit (fun () -> initialValue)
+        |> mapValue ignore)
 
 let stepT = 0.0001
 let stepV = 0.001
