@@ -1,13 +1,13 @@
 open Vector2
 
-let farmerPosition (t: float) = Vector2 (1., t)
+let farmerPosition (t: float) = Vector2.make 1. t
 
 let boarVelocity (boarSpeed: float) boarPosition (t: float) =
     (boarSpeed /. (norm ((farmerPosition t) %- boarPosition))) %* (farmerPosition t %- boarPosition)
 
 let computeSolutionForBoarSpeed boarSpeed stepT =
     boarVelocity boarSpeed
-    |> Solver.solve (0., 1.) (Vector2 (0., 0.)) stepT
+    |> Solver.solve (0., 1.) (Vector2.make  0. 0.) stepT
     |> NumericalSolution.toFunction (%+) (%*)
 
 let sameSpeedSolution stepT = computeSolutionForBoarSpeed 1.0 stepT
