@@ -5,6 +5,9 @@ let farmerPosition (t: float) = Vector2.make 1. t
 let boarVelocity (boarSpeed: float) boarPosition (t: float) =
     (boarSpeed /. (norm ((farmerPosition t) %- boarPosition))) %* (farmerPosition t %- boarPosition)
 
+let boarVelocity (boarSpeed: float) boarPosition (t: float) =
+    (boarSpeed /. (Vector2.norm ((farmerPosition t) %- boarPosition))) %* (farmerPosition t %- boarPosition)
+
 let computeSolutionForBoarSpeed boarSpeed stepT =
     boarVelocity boarSpeed
     |> Solver.solve (0., 1.) (Vector2.make  0. 0.) stepT
